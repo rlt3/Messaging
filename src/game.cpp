@@ -10,10 +10,11 @@ Game::~Game() {
 }
 
 void
-Game::message(Message msg)
+Game::message(const Message &msg)
 {
   switch(msg.type) {
-    case ATTACK: break;
+    case ATTACK: 
+      break;
 
     case MOVEMENT:
       notify(_room, msg);
@@ -24,7 +25,7 @@ Game::message(Message msg)
       break;
 
     case LOCATION:
-      printf("%f, %f\n", msg.location.x, msg.location.y);
+      printf("%f, %f\n", msg.data<Coordinate>().x, msg.data<Coordinate>().y);
       break;
   }
 }

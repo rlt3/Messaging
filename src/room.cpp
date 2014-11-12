@@ -19,7 +19,7 @@ Room::~Room()
  * Imagine the phrase, "Speak to the room."
  */
 void
-Room::message(Message msg)
+Room::message(const Message &msg)
 {
   Entity_Iterator entity;
   for(entity = _entities.begin(); entity != _entities.end(); ++entity) {

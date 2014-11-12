@@ -1,40 +1,75 @@
 #ifndef SLOW_MESSAGE_HPP
 #define SLOW_MESSAGE_HPP
 
-#include "coordinate.hpp"
 #include "types.hpp"
+#include <memory>
 
 /*
- * The message is the most basic form of information for this system. It is the
- * fuel of the engine.
+ * Message is a class that attempts type erasure by using templates and some
+ * cleverly nested classes to hold nearly any type of data.
  *
- * Maybe the message is extensible into something like Attack_Message which
- * then we just use Unions to pass around messages.
+ * Data is derived by context. So, the type of message it is should give clue
+ * enough to pull out the data like msg.data<Coordinate>();
  *
- * Another idea: Query_Message type and have the message method for each Entity
- * always return a message. Sometimes a response is needed, other times it
- * doesn't matter.
+ * Our message class makes it so where our Message can be accepted anywhere and
+ * then, after looking at what kind of message it is, be used however it needs
+ * to be.
+ *
+ * Some scenarios on messages (for our one data member):
+ *
+ * (To Room) Entity A: Attack, Location (10, 10)
+ *           Entity B: Hit, <true>
+ *           Entity A: Damage, 10
+ *
+ * (To Room) Entity A: Moving, Location (5, 5)
+ *           Entity B: Collide, <true>
+ *
  */
 
 class Messageable;
 
-struct Message {
-  Message_Type type;
-  Messageable *sender;
-  Coordinate location;
+class Message {
+private:
+  /* a common base class for a base pointer */
+  class DataCore
+  {
+  public:
+    virtual ~DataCore() { }
+  };
 
-  /* 
-   * payload could be a void pointer to a function, or void pointer to a certain
-   * object. Right now the int can be cast to a enum based on the message type.
-   *
-   * So, it can be the range (aoe) of damage, or actual damage, or what have
-   * you.
-   */
-  int payload;
+  /* template class inheriting our base pointer type */
+  template <typename T>
+  class Data : public DataCore
+  {
+  public:
+    explicit Data(T v) : _value(v) { }
+    T value() { return _value; }
+  private:
+    T _value;
+  };
 
-  Message(Message_Type t, Messageable *m, Coordinate l, int p)
-    : type(t), sender(m), location(l), payload(p) 
+public:
+  /* constructor for any non-pointer data */
+  template <typename T> 
+  explicit Message(Messageable *m, message_t t, T d) 
+    : sender(m), type(t), _data(new Data<T>(d)) 
   { }
+
+  /* constructor for messages with no data (message itself is the data) */
+  explicit Message(Messageable *m, message_t t) 
+    : sender(m), type(t) 
+  { }
+
+  /* cast into the correct type and our data here is constant */
+  template <typename T> T data() const {
+    return static_cast<Data<T>*>(_data.get())->value();
+  }
+
+  Messageable *sender;
+  message_t    type;
+
+private:
+  std::shared_ptr<DataCore> _data;
 };
 
 #endif

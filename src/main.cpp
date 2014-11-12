@@ -5,16 +5,11 @@ main()
 {
   Game game;
 
-  Message move_left(MOVEMENT, &game, Coordinate(10, 10), (int) LEFT);
-  Message move_right(MOVEMENT, &game, Coordinate(10, 10), (int) RIGHT);
-  Message move_down(MOVEMENT, &game, Coordinate(10, 10), (int) DOWN);
-  Message find(LOCATE, &game, Coordinate(10, 10), 0);
-
-  game.message(find);
-  game.message(move_left);
-  game.message(move_right);
-  game.message(move_down);
-  game.message(find);
+  game.message(Message(&game, LOCATE));
+  game.message(Message(&game, MOVEMENT, LEFT));
+  game.message(Message(&game, MOVEMENT, RIGHT));
+  game.message(Message(&game, MOVEMENT, DOWN));
+  game.message(Message(&game, LOCATE));
 
   return 0;
 }

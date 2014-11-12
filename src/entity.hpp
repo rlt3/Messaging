@@ -14,13 +14,13 @@
 
 class Entity : public Messageable {
 public:
-  Entity(Entity_Type type, Room *room, float x, float y)
+  Entity(entity_t type, Room *room, float x, float y)
     : _state(IDLE)
     , _type(type)
     , _coordinates(x, y)
   { }
 
-  void message(Message msg)
+  void message(const Message &msg)
   {
     switch(msg.type) {
       case ATTACK: 
@@ -28,11 +28,11 @@ public:
         break;
 
       case MOVEMENT:
-        _move((Direction) msg.payload);
+        _move(msg.data<Direction>());
         break;
 
       case LOCATE:
-        notify(msg.sender, Message(LOCATION, this, _coordinates, 0));
+        notify(msg.sender, Message(this, LOCATION, _coordinates));
         break;
     }
   }
@@ -40,13 +40,12 @@ public:
 protected:
 
   /* broadcast message to room */
-  virtual void broadcast(Message msg) 
-  { 
+  void broadcast(const Message &msg) 
+  {
     this->notify(_room, msg);
   }
 
-  void
-  _move(Direction direction)
+  void _move(Direction direction)
   {
     switch(direction) {
       case UP:
@@ -67,7 +66,7 @@ protected:
     }
   }
 
-  Entity_Type _type;
+  entity_t    _type;
   State       _state;
   Coordinate  _coordinates;
   Room       *_room;

@@ -12,6 +12,8 @@
 
 class Entity;
 
+/* TODO: use a vector of std::shared_ptr for entities */
+
 typedef std::vector<Entity*>::iterator Entity_Iterator;
 
 class Room : public Messageable {
@@ -19,7 +21,7 @@ public:
   Room();
   ~Room();
 
-  void message(Message msg);
+  void message(const Message &msg);
 
 protected:
   void add_entity();

@@ -1,12 +1,12 @@
 #ifndef SLOW_TYPES_HPP
 #define SLOW_TYPES_HPP
 
-enum Entity_Type {
+enum entity_t {
   PLAYER,
   MONSTER
 };
 
-enum Message_Type {
+enum message_t {
   ATTACK,
   MOVEMENT,
   LOCATE,

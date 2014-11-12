@@ -28,8 +28,6 @@
  * or "update" or "move".
  */
 
-class Messageable;
-
 class Messageable {
 public:
   Messageable() { }
@@ -42,12 +40,12 @@ public:
    */
   virtual ~Messageable() { }
 
-  virtual void message(Message msg) { }
+  virtual void message(const Message &msg) { }
 
 protected:
 
   /* notify a singular other messagable */
-  virtual void notify(Messageable *e, Message msg) 
+  virtual void notify(Messageable *e, const Message &msg) 
   { 
     e->message(msg); 
   }
