@@ -1,43 +1,60 @@
-#include <SDL2/SDL.h>
-#include "game.hpp"
+#include <iostream>
 
-#define ONE_SECOND       1000
-#define THIRTY_FPS       (ONE_SECOND/30)
-#define FIFTEEN_FPS      (ONE_SECOND/15)
+#include "Broadcaster.hpp"
+#include "Component.hpp"
 
-int
-main()
-{
-  SDL_Event event;
-  Game game;
+#include "InputComponent.hpp"
+#include "HealthComponent.hpp"
+#include "VectorComponent.hpp"
+#include "CollisionComponent.hpp"
 
-  bool running = true;
-
-  uint32_t current_time = SDL_GetTicks();
-  uint32_t last_time    = current_time;
-
-  while (running) {
-
-    current_time = SDL_GetTicks();
-
-    while (SDL_PollEvent(&event)) {
-      switch (event.type) {
-        case SDL_KEYDOWN:
-          switch(event.key.keysym.sym) {
-            case SDLK_ESCAPE: case SDL_QUIT:  
-              running = false;
-              break;
-          }
-      }
-    }
-
-    if (current_time - last_time > THIRTY_FPS) {
-      last_time = current_time;
-      game.update();
-    }
-
-    game.render();
+class Entity : public Broadcaster<Component> {
+public:
+  Entity(Broadcaster<Entity> *b, std::string s) 
+    : Broadcaster<Component>(), _broadcaster(b)
+  { 
+    name = s; 
+    _messageables.push_back(InputComponent(this));
+    _messageables.push_back(VectorComponent(this));
+    _messageables.push_back(HealthComponent(this));
+    _messageables.push_back(CollisionComponent(this));
   }
+
+  ~Entity() { }
+
+  void message(const Message &msg)
+  {
+    switch(msg.type) {
+      case BROADCAST:
+        _broadcaster->message(msg.data<Message>());
+        break;
+
+      default:
+        _broadcast(msg);
+        break;
+    }
+  }
+
+protected:
+  Broadcaster<Entity> *_broadcaster;
+};
+
+class Room : public Broadcaster<Entity> {
+public:
+  Room() : Broadcaster<Entity>()
+  { 
+    _messageables.push_back(Entity(this, "John"));
+    _messageables.push_back(Entity(this, "Erin"));
+  }
+
+  ~Room() { }
+};
+
+int main()
+{
+  Room room;
+
+  room.message(Message(&room, UPDATE));
 
   return 0;
 }

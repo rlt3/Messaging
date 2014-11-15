@@ -1,10 +1,10 @@
 CC         := clang++
 
-LIBRARIES  :=-I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks
-FRAMEWORKS :=-framework Cocoa -framework SDL2
+#LIBRARIES  :=-I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks
+#FRAMEWORKS :=-framework Cocoa -framework SDL2
 
 SRCDIR     := src
-SOURCES    := src/main.cpp src/room.cpp src/graphics.cpp src/game.cpp
+SOURCES    := src/main.cpp 
 
 OBJDIR     := obj
 OBJECTS    := ${SOURCES:${SRCDIR}/%.cpp=${OBJDIR}/%.o}

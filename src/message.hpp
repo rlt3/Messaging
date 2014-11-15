@@ -1,7 +1,7 @@
 #ifndef SLOW_MESSAGE_HPP
 #define SLOW_MESSAGE_HPP
 
-#include "types.hpp"
+#include "Types.hpp"
 #include <memory>
 
 /*
@@ -18,11 +18,11 @@
  * Some scenarios on messages (for our one data member):
  *
  * (To Room) Entity A: Attack, Location (10, 10)
- *           Entity B: Hit, <true>
+ *           Entity B: Hit
  *           Entity A: Damage, 10
  *
  * (To Room) Entity A: Moving, Location (5, 5)
- *           Entity B: Collide, <true>
+ *           Entity B: Collide
  *
  */
 

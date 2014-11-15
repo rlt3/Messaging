@@ -1,32 +1,20 @@
 #ifndef SLOW_TYPES_HPP
 #define SLOW_TYPES_HPP
 
-enum entity_t {
-  PLAYER,
-  MONSTER
-};
-
 enum message_t {
+  /* From System */
+  UPDATE, 
+
+  /* Within Entity */
   BROADCAST,
-  UPDATE,
-  ATTACK,
-  DRAW,
   MOVE,
+
+  /* Between Entities */
   MOVEMENT,
-  LOCATE,
-  LOCATION
-};
-
-enum Direction {
-  UP,
-  RIGHT,
-  DOWN,
-  LEFT
-};
-
-enum State {
-  IDLE,
-  FLEE
+  COLLIDE,
+  ATTACK,
+  HIT,
+  DAMAGE
 };
 
 #endif

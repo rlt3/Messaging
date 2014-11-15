@@ -1,7 +1,8 @@
 #ifndef SLOW_MESSAGEABLE_HPP
 #define SLOW_MESSAGEABLE_HPP
 
-#include "message.hpp"
+#include <string>
+#include "Message.hpp"
 
 /*
  * The Messageable class is the root class of the game. And the Message struct
@@ -31,31 +32,18 @@
 class Messageable {
 public:
   Messageable() { }
-
-  /* Not making a virtual destructor and then having Entites (or components)
-   * that inherit Messageable into a Messageable pointer causes the destructor for 
-   * Messageable to get called instead of that class's.
-   *
-   * Adding virtual fixes this issue.
-   */
   virtual ~Messageable() { }
-
   virtual void message(const Message &msg) { }
+
+  std::string name;
 
 protected:
 
   /* notify a singular other messagable */
-  virtual void notify(Messageable *e, const Message &msg) 
+  virtual void notify(Messageable *m, const Message &msg) 
   { 
-    e->message(msg); 
+    m->message(msg); 
   }
-
-  /* For broadcast, do you broadcast to a Broadcastable ? 
-   *
-   * If you are messaging the room, typically you are broadcasting to the room,
-   * but the Room might look at the message and hold back SYSTEM messages, let's
-   * say.
-   */
 };
 
 #endif
