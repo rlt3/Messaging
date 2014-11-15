@@ -1,25 +1,24 @@
 #include <stdio.h>
 #include "game.hpp"
 
-Game::Game() { 
-  _room = new Room();
-}
+Game::Game() 
+  : _room(new Room())
+  , _graphics()
+{ }
 
 Game::~Game() {
   delete _room;
 }
 
-void
-Game::message(const Message &msg)
+void Game::message(const Message &msg)
 {
   switch(msg.type) {
     case ATTACK: 
-      break;
-
     case MOVEMENT:
-      notify(_room, msg);
       break;
 
+    case DRAW: 
+    case UPDATE:
     case LOCATE:
       notify(_room, msg);
       break;
@@ -28,4 +27,14 @@ Game::message(const Message &msg)
       printf("%f, %f\n", msg.data<Coordinate>().x, msg.data<Coordinate>().y);
       break;
   }
+}
+
+void Game::render()
+{
+  _graphics.message(Message(this, DRAW));
+}
+
+void Game::update()
+{
+  message(Message(this, UPDATE));
 }

@@ -7,7 +7,11 @@ enum entity_t {
 };
 
 enum message_t {
+  BROADCAST,
+  UPDATE,
   ATTACK,
+  DRAW,
+  MOVE,
   MOVEMENT,
   LOCATE,
   LOCATION
@@ -22,7 +26,6 @@ enum Direction {
 
 enum State {
   IDLE,
-  MOVE,
   FLEE
 };
 

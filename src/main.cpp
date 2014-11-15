@@ -1,15 +1,43 @@
+#include <SDL2/SDL.h>
 #include "game.hpp"
+
+#define ONE_SECOND       1000
+#define THIRTY_FPS       (ONE_SECOND/30)
+#define FIFTEEN_FPS      (ONE_SECOND/15)
 
 int
 main()
 {
+  SDL_Event event;
   Game game;
 
-  game.message(Message(&game, LOCATE));
-  game.message(Message(&game, MOVEMENT, LEFT));
-  game.message(Message(&game, MOVEMENT, RIGHT));
-  game.message(Message(&game, MOVEMENT, DOWN));
-  game.message(Message(&game, LOCATE));
+  bool running = true;
+
+  uint32_t current_time = SDL_GetTicks();
+  uint32_t last_time    = current_time;
+
+  while (running) {
+
+    current_time = SDL_GetTicks();
+
+    while (SDL_PollEvent(&event)) {
+      switch (event.type) {
+        case SDL_KEYDOWN:
+          switch(event.key.keysym.sym) {
+            case SDLK_ESCAPE: case SDL_QUIT:  
+              running = false;
+              break;
+          }
+      }
+    }
+
+    if (current_time - last_time > THIRTY_FPS) {
+      last_time = current_time;
+      game.update();
+    }
+
+    game.render();
+  }
 
   return 0;
 }

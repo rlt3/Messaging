@@ -4,6 +4,7 @@
 #include "messageable.hpp"
 #include "coordinate.hpp"
 #include "room.hpp"
+#include "graphics.hpp"
 
 class Game : public Messageable {
 public:
@@ -11,9 +12,12 @@ public:
   ~Game();
 
   void message(const Message &msg);
+  void render();
+  void update();
 
 protected:
   Messageable *_room;
+  Graphics     _graphics;
 };
 
 #endif
