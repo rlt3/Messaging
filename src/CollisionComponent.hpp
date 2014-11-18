@@ -5,27 +5,30 @@
 
 class CollisionComponent : public Component {
 public:
-  CollisionComponent(Messageable *m) : _entity(m) { }
+  CollisionComponent(Messageable *m) : Component(m) { }
 
   void message(const Message &msg)
   {
     switch(msg.type) {
       case MOVEMENT:
         std::cout << _entity->name << " was bumped by " << msg.sender->name << "." << std::endl;
-        broadcast(_entity, Message(_entity, COLLIDE));
+        broadcast(Message(_entity, COLLIDE));
+        break;
 
       case ATTACK:
-        std::cout << _entity->name << " was hit by " << msg.sender->name << "." << std::endl;
-        broadcast(_entity, Message(_entity, HIT));
+        std::cout << _entity->name << " was attacked by " << msg.sender->name << "." << std::endl;
+        broadcast(Message(_entity, HIT));
+        break;
+
+      case HIT:
+        std::cout << _entity->name << " hit " << msg.sender->name << "." << std::endl;
+        broadcast(Message(_entity, DAMAGE, 10));
+        break;
 
       default:
         break;
     }
   }
-
-protected:
-  Messageable *_entity;
-
 };
 
 #endif

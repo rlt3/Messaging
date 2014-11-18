@@ -5,7 +5,7 @@
 
 class InputComponent : public Component {
 public:
-  InputComponent(Messageable *m) : _entity(m) { }
+  InputComponent(Messageable *m) : Component(m) { }
 
   void message(const Message &msg)
   {
@@ -13,15 +13,12 @@ public:
       case UPDATE:
         std::cout << "(Moving " << _entity->name << ".)" << std::endl;
         _entity->message(Message(this, MOVE));
+        break;
 
       default:
         break;
     }
   }
-
-protected:
-  Messageable *_entity;
-
 };
 
 #endif

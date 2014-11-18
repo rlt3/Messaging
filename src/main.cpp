@@ -11,13 +11,13 @@
 class Entity : public Broadcaster<Component> {
 public:
   Entity(Broadcaster<Entity> *b, std::string s) 
-    : Broadcaster<Component>(), _broadcaster(b)
+    : Broadcaster<Component>(), _room(b)
   { 
     name = s; 
-    _messageables.push_back(InputComponent(this));
-    _messageables.push_back(VectorComponent(this));
-    _messageables.push_back(HealthComponent(this));
-    _messageables.push_back(CollisionComponent(this));
+    _messageables.push_back(new InputComponent(this));
+    _messageables.push_back(new VectorComponent(this));
+    _messageables.push_back(new HealthComponent(this));
+    _messageables.push_back(new CollisionComponent(this));
   }
 
   ~Entity() { }
@@ -26,7 +26,7 @@ public:
   {
     switch(msg.type) {
       case BROADCAST:
-        _broadcaster->message(msg.data<Message>());
+        _room->message(msg.data<Message>());
         break;
 
       default:
@@ -36,15 +36,22 @@ public:
   }
 
 protected:
-  Broadcaster<Entity> *_broadcaster;
+  Broadcaster<Entity> *_room;
 };
 
 class Room : public Broadcaster<Entity> {
 public:
   Room() : Broadcaster<Entity>()
   { 
-    _messageables.push_back(Entity(this, "John"));
-    _messageables.push_back(Entity(this, "Erin"));
+    //_messageables.push_back(new Entity(this, "John"));
+    //_messageables.push_back(new Entity(this, "Erin"));
+  }
+
+  Entity* add(std::string name)
+  {
+    Entity* e = new Entity(this, name);
+    _messageables.push_back(e);
+    return e;
   }
 
   ~Room() { }
@@ -53,8 +60,39 @@ public:
 int main()
 {
   Room room;
+  Entity *john = room.add("John");
+  Entity *erin = room.add("Erin");
 
-  room.message(Message(&room, UPDATE));
+  john->message(Message(erin, ATTACK));
+  
+  /*
+   * InputComponent is Entity? Seems to be only component sending messages to
+   * components (kinda like a Broadcaster<Component>), which seems familiar...
+   *
+   * All other components just receive messages from outside entities and do
+   * actions based on that. No other component tells other component things, 
+   * like the entity had collided -- other entities send that message.
+   *
+   * ---
+   *
+   * Combat    [ATTACK]
+   * Collision [HIT, COLLIDE]
+   * Vector    [MOVEMENT]
+   * Graphics  [DRAW, HIT (bounce), ATTACK, COLLIDE ...]
+   * Health    [DAMAGE, DEATH]
+   * Sound     [COLLIDE, HIT, DAMAGE, DEATH]
+   *
+   */
 
   return 0;
 }
+
+/*
+ 
+class Player : public Entity, protected Input {
+};
+
+class Monster : public Entity, protected AI {
+};
+
+*/

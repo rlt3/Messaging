@@ -13,16 +13,24 @@
 
 class Component : public Messageable {
 public:
-  //Component(Messageable *m) : _entity(m) { }
-  Component() { }
-
+  Component(Messageable *m) : _entity(m) { }
+  virtual ~Component() { }
   virtual void message(const Message &m) { }
 
 protected:
-  void broadcast(Messageable *e, const Message &msg)
+  /* Need a way to broadcast always with entity as second message sender 
+  virtual void broadcast(Data data)
   {
-    e->message(Message(this, BROADCAST, msg));
+    _entity->message(Message(this, BROADCAST, Message(_entity, data)));
   }
+  */
+
+  virtual void broadcast(const Message &msg)
+  {
+    _entity->message(Message(this, BROADCAST, msg));
+  }
+
+  Messageable *_entity;
 };
 
 #endif

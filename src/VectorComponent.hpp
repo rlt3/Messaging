@@ -5,23 +5,20 @@
 
 class VectorComponent : public Component {
 public:
-  VectorComponent(Messageable *m) : _entity(m) { }
+  VectorComponent(Messageable *m) : Component(m) { }
 
   void message(const Message &msg)
   {
     switch(msg.type) {
       case MOVE:
         std::cout << "Moving " << _entity->name << "." << std::endl;
-        broadcast(_entity, Message(_entity, MOVEMENT));
+        broadcast(Message(_entity, MOVEMENT));
+        break;
 
       default:
         break;
     }
   }
-
-protected:
-  Messageable *_entity;
-
 };
 
 #endif

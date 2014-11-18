@@ -11,33 +11,32 @@
 template <typename T>
 class Broadcaster : public Messageable {
 public:
-  typedef typename std::vector<T>::iterator iterator;
+  typedef typename std::vector<T*>::iterator iterator;
 
   Broadcaster() { }
-  virtual ~Broadcaster() { }
-
-  void message(const Message &msg)
-  {
-    switch(msg.type) {
-      case UPDATE:
-        _broadcast(msg);
-        break;
-
-      default:
-        break;
+  ~Broadcaster() 
+  { 
+    iterator m;
+    for(m = _messageables.begin(); m != _messageables.end(); ++m) {
+      delete (*m);
     }
   }
 
+  virtual void message(const Message &msg)
+  {
+    _broadcast(msg);
+  }
+
 protected:
-  std::vector<T> _messageables;
+  std::vector<T*> _messageables;
 
   void _broadcast(const Message &msg)
   {
     iterator m;
     for(m = _messageables.begin(); m != _messageables.end(); ++m) {
       /* Do message the sender */
-      if (msg.sender != &(*m)) {
-        m->message(msg);
+      if (msg.sender != (*m)) {
+        (*m)->message(msg);
       }
     }
   }
