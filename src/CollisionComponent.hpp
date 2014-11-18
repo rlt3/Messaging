@@ -16,6 +16,10 @@ public:
         break;
 
       case ATTACK:
+        if (msg.sender == _entity) {
+          std::cout << "Message from self." << std::endl;
+        }
+
         std::cout << _entity->name << " was attacked by " << msg.sender->name << "." << std::endl;
         broadcast(Message(_entity, HIT));
         break;
