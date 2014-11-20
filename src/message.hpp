@@ -10,20 +10,6 @@
  *
  * Data is derived by context. So, the type of message it is should give clue
  * enough to pull out the data like msg.data<Coordinate>();
- *
- * Our message class makes it so where our Message can be accepted anywhere and
- * then, after looking at what kind of message it is, be used however it needs
- * to be.
- *
- * Some scenarios on messages (for our one data member):
- *
- * (To Room) Entity A: Attack, Location (10, 10)
- *           Entity B: Hit
- *           Entity A: Damage, 10
- *
- * (To Room) Entity A: Moving, Location (5, 5)
- *           Entity B: Collide
- *
  */
 
 class Messageable;

@@ -4,33 +4,22 @@
 #include "Messageable.hpp"
 
 /*
- * Components are components of Entities which is why they all take entity
- * pointers.
+ * Components are an entity. So, they can message the room as that entity.
+ * They can also send messages to self.
  *
- * Entities are a broadcaster for Components and accept a broadcaster of 
- * Entities so they can talk to broadcast to other entities.
+ * Does the entity need to `take up space'? Add a collision component. Does it
+ * need to be autonomous? Go ahead, throw in an AI component. Want it to be
+ * renderer? Gotta have that graphics component.
  */
 
 class Component : public Messageable {
 public:
-  Component(Messageable *m) : _entity(m) { }
+  Component(Messageable *e, Messageable *r) : _self(e), _room(r) { }
   virtual ~Component() { }
-  virtual void message(const Message &m) { }
 
 protected:
-  /* Need a way to broadcast always with entity as second message sender 
-  virtual void broadcast(Data data)
-  {
-    _entity->message(Message(this, BROADCAST, Message(_entity, data)));
-  }
-  */
-
-  virtual void broadcast(const Message &msg)
-  {
-    _entity->message(Message(this, BROADCAST, msg));
-  }
-
-  Messageable *_entity;
+  Messageable *_self;
+  Messageable *_room;
 };
 
 #endif

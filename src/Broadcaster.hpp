@@ -34,7 +34,7 @@ protected:
   {
     iterator m;
     for(m = _messageables.begin(); m != _messageables.end(); ++m) {
-      /* Do message the sender */
+      /* Don't message the sender */
       if (msg.sender != (*m)) {
         (*m)->message(msg);
       }
@@ -42,8 +42,8 @@ protected:
   }
 
   /* might need to make these pointers */
-  void _add(T &m);
-  void _remove(T &m);
+  //void _add(T &m);
+  //void _remove(T &m);
 };
 
 #endif

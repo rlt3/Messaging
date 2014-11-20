@@ -5,7 +5,7 @@
 
 class HealthComponent : public Component {
 public:
-  HealthComponent(Messageable *m) : Component(m) { }
+  HealthComponent(Messageable *e, Messageable *r) : Component(e, r) { }
 
   void message(const Message &msg)
   {
@@ -14,7 +14,7 @@ public:
     switch(msg.type) {
       case DAMAGE:
         d = msg.data<int>();
-        std::cout << _entity->name << " was dealt " << d << " damage by " << msg.sender->name << "." << std::endl;
+        std::cout << _self->name << " was dealt " << d << " damage by " << msg.sender->name << "." << std::endl;
         break;
 
       default:

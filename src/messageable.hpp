@@ -5,8 +5,8 @@
 #include "Message.hpp"
 
 /*
- * The Messageable class is the root class of the game. And the Message struct
- * is the root piece of data on which the game is ran.
+ * The Messageable class is the root class of the game. And the Message is the 
+ * root piece of data on which the game is ran.
  *
  * The design thought-process is this:
  *
