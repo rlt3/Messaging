@@ -3,10 +3,14 @@
 
 enum message_t {
   /* From System */
+  START,
+  QUIT,
   UPDATE, 
+  INPUT,
+  RENDER,
+  DRAW,
 
   /* Within Entity */
-  BROADCAST,
   MOVE,
 
   /* Between Entities */
@@ -15,6 +19,13 @@ enum message_t {
   ATTACK,
   HIT,
   DAMAGE
+};
+
+enum Direction {
+  UP,
+  RIGHT,
+  DOWN,
+  LEFT
 };
 
 #endif

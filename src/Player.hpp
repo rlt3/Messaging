@@ -3,6 +3,7 @@
 
 #include "Entity.hpp"
 
+#include "GraphicsComponent.hpp"
 #include "InputComponent.hpp"
 #include "HealthComponent.hpp"
 #include "VectorComponent.hpp"
@@ -10,8 +11,10 @@
 
 class Player : public Entity {
 public:
-  Player(Broadcaster<Entity> *room, std::string s) : Entity(room, s)
+  Player(Broadcaster<Entity> *room, float x, float y) 
+    : Entity(room, x, y, "Player")
   { 
+    _messageables.push_back(new GraphicsComponent(&_position, 255, 255, 255, this, room));
     _messageables.push_back(new InputComponent(this, room));
     _messageables.push_back(new VectorComponent(this, room));
     _messageables.push_back(new HealthComponent(this, room));

@@ -3,11 +3,12 @@
 
 #include "Broadcaster.hpp"
 #include "Component.hpp"
+#include "Coordinate.hpp"
 
 class Entity : public Broadcaster<Component> {
 public:
-  Entity(Broadcaster<Entity> *room, std::string s) 
-    : Broadcaster<Component>(), _room(room)
+  Entity(Broadcaster<Entity> *room, float x, float y, std::string s) 
+    : Broadcaster<Component>(), _room(room), _position(Coordinate(x, y))
   { 
     name = s;
   }
@@ -16,6 +17,7 @@ public:
 
 protected:
   Broadcaster<Entity> *_room;
+  Coordinate _position;
 };
 
 #endif
