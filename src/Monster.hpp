@@ -14,9 +14,9 @@ public:
     : Entity(room, x, y, "Monster")
   { 
     _messageables.push_back(new GraphicsComponent(&_position, 0, 0, 0, this, room));
-    _messageables.push_back(new VectorComponent(this, room));
+    _messageables.push_back(new VectorComponent(&_position, this, room));
+    _messageables.push_back(new CollisionComponent(&_position, this, room));
     _messageables.push_back(new HealthComponent(this, room));
-    _messageables.push_back(new CollisionComponent(this, room));
   }
 };
 

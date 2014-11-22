@@ -25,19 +25,19 @@ public:
 protected:
   void _update() 
   {
-    if (_keystate[SDL_SCANCODE_W]) {
+    if (Input::_keystate[SDL_SCANCODE_W]) {
       _self->message(Message(_self, MOVE, UP));
     }
 
-    if (_keystate[SDL_SCANCODE_A]) {
+    if (Input::_keystate[SDL_SCANCODE_A]) {
       _self->message(Message(_self, MOVE, LEFT));
     }
 
-    if (_keystate[SDL_SCANCODE_S]) {
+    if (Input::_keystate[SDL_SCANCODE_S]) {
       _self->message(Message(_self, MOVE, DOWN));
     }
 
-    if (_keystate[SDL_SCANCODE_D]) {
+    if (Input::_keystate[SDL_SCANCODE_D]) {
       _self->message(Message(_self, MOVE, RIGHT));
     }
   }

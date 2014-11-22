@@ -6,12 +6,13 @@
 
 class Input : public Messageable {
 public:
+  /* perhaps a virtual constructor for inheritance ? */
   Input(Messageable *g);
 
   void message(const Message &msg);
 
 protected:
-  const Uint8 *_keystate;
+  static const Uint8 *_keystate;
 
   void _update();
 

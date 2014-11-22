@@ -1,5 +1,7 @@
 #include "Input.hpp"
 
+const Uint8 * Input::_keystate;
+
 Input::Input(Messageable *g) : _game(g) { }
 
 void Input::message(const Message &msg) {
@@ -24,5 +26,5 @@ void Input::_update() {
         }
     }
   }
-  _keystate = SDL_GetKeyboardState(NULL);
+  Input::_keystate = SDL_GetKeyboardState(NULL);
 }
