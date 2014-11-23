@@ -50,8 +50,54 @@ protected:
     _room->message(Message(_self, MOVEMENT, *_position));
   }
 
+  static Coordinate direction_by_state(Direction dir) {
+    switch(dir) {
+      case UP :
+        return Coordinate(0, -1);
+
+      case RIGHT :
+        return Coordinate(1, 0);
+
+      case DOWN :
+        return Coordinate(0, 1);
+
+      case LEFT :
+        return Coordinate(-1, 0);
+
+      default:
+        return Coordinate(0, 0);
+    }
+  }
+
   Coordinate *_position;
   Coordinate _last_position;
+
+  /* 
+   * Vector holds direction and only takes input on whether or not we're moving
+   * or not. Even if we're not moving, we still face that direction.
+   *
+   * Or, maybe, the body class (which all Entities have) should contain 
+   * direction within itself.
+   */
+  Direction _direction;
+
+  /*
+   * There is T for units of movement  per second elapsed. N is time in seconds.
+   * So, if one second has passed and the player has T = 3, then the player has
+   * moved 3 units.
+   *
+   * This delta time lets us update independently so we do not have to keep a
+   * separate timestamp for each module (component).
+   *
+   * This is basically interpolation. This lets us update normally (30 fps) 
+   * without having to constantly send update messages to this component. It can
+   * interpolate its position from time itself.
+   *
+   * next_step = current_position + (Direction * Time [N] * Speed [T]);
+   */
+
+  uint8_t _magnitude;  // Current speed up to T
+  uint8_t _speed;      // <= T
 };
 
 #endif
