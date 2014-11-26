@@ -36,8 +36,8 @@ void Game::_loop() {
     _broadcast(Message(this, INPUT));
 
     if (_current_time - _last_time > THIRTY_FPS) {
+      _broadcast(Message(this, UPDATE, (_current_time - _last_time)));
       _last_time = _current_time;
-      _broadcast(Message(this, UPDATE));
     }
 
     _broadcast(Message(this, RENDER));

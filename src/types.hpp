@@ -12,6 +12,7 @@ enum message_t {
 
   /* Within Entity */
   MOVE,
+  STOP,
 
   /* Between Entities */
   MOVEMENT,
@@ -26,6 +27,11 @@ enum Direction {
   RIGHT,
   DOWN,
   LEFT
+};
+
+enum State {
+  MOVING,
+  IDLE,
 };
 
 #endif

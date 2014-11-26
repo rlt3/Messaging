@@ -15,10 +15,26 @@ public:
     : Entity(room, x, y, "Player")
   { 
     _messageables.push_back(new GraphicsComponent(&_position, 255, 255, 255, this, room));
-    _messageables.push_back(new VectorComponent(&_position, this, room));
+    _messageables.push_back(new VectorComponent(&_position, &_state, 20, this, room));
     _messageables.push_back(new CollisionComponent(&_position, this, room));
     _messageables.push_back(new InputComponent(this, room));
     _messageables.push_back(new HealthComponent(this, room));
+  }
+
+  void message(const Message &msg) {
+    switch (msg.type) {
+      case MOVE:
+        _state = MOVING;
+        break;
+
+      case STOP:
+        _state = IDLE;
+        break;
+
+      default:
+        break;
+    }
+    _broadcast(msg);
   }
 };
 

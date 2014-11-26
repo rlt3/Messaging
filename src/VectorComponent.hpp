@@ -5,21 +5,23 @@
 
 class VectorComponent : public Component {
 public:
-  VectorComponent(Coordinate *c, Messageable *e, Messageable *r) 
-    : Component(e, r), _position(c)
+  VectorComponent(Coordinate *c, State *state, int speed, Messageable *e, Messageable *r) 
+    : Component(e, r), _position(c), _state(state), _speed(speed)
   { }
 
   void message(const Message &msg)
   {
     switch(msg.type) {
+      case UPDATE:
+        _move(msg.data<uint32_t>());
+        break;
+
       case MOVE:
-        //std::cout << "Moving " << _self->name << "." << std::endl;
-        _move(msg.data<Direction>());
+        _direction = direction_by_state(msg.data<Direction>());
         break;
 
       case COLLIDE:
-        /* just change direction 180 degrees for collision when vector is built */
-        *_position = _last_position;
+        inverse_direction();
         break;
 
       default:
@@ -28,25 +30,20 @@ public:
   }
 
 protected:
-  void _move(Direction dir)
+  void _oscilate_magnitude() {
+    if(*_state == MOVING && _magnitude <= _speed)
+      _magnitude += (_magnitude == _speed) ? 0 : 1;
+    else
+      _magnitude -= (_magnitude == 0) ? 0 : 1;
+  }
+
+  void _move(uint32_t dt)
   {
-    _last_position = *_position;
+    _oscilate_magnitude();
 
-    switch (dir) {
-      case UP:
-        *_position = Coordinate(_position->x, _position->y - 1);
-        break;
-      case RIGHT:
-        *_position = Coordinate(_position->x + 1, _position->y);
-        break;
-      case DOWN:
-        *_position = Coordinate(_position->x, _position->y + 1);
-        break;
-      case LEFT:
-        *_position = Coordinate(_position->x - 1, _position->y);
-        break;
-    }
-
+    *_position = Coordinate::add(*_position, 
+        Coordinate::multiply(_direction, _magnitude));
+    
     _room->message(Message(_self, MOVEMENT, *_position));
   }
 
@@ -69,31 +66,26 @@ protected:
     }
   }
 
+  void inverse_direction() {
+    _direction.x = -_direction.x;
+    _direction.y = -_direction.y;
+  }
+
   Coordinate *_position;
-  Coordinate _last_position;
+  Coordinate _direction;
+
+  State *_state;
 
   /* 
-   * Vector holds direction and only takes input on whether or not we're moving
-   * or not. Even if we're not moving, we still face that direction.
+   * Can combine magnitude/speed into a Coordinate which represents the 
+   * direction being moved and at what speed. While entity is moving, the
+   * magnitude rises to the speed at whatever direction and lower to 0 when
+   * not moving.
    *
-   * Or, maybe, the body class (which all Entities have) should contain 
-   * direction within itself.
-   */
-  Direction _direction;
-
-  /*
-   * There is T for units of movement  per second elapsed. N is time in seconds.
-   * So, if one second has passed and the player has T = 3, then the player has
-   * moved 3 units.
-   *
-   * This delta time lets us update independently so we do not have to keep a
-   * separate timestamp for each module (component).
-   *
-   * This is basically interpolation. This lets us update normally (30 fps) 
-   * without having to constantly send update messages to this component. It can
-   * interpolate its position from time itself.
-   *
-   * next_step = current_position + (Direction * Time [N] * Speed [T]);
+   * We can use this to set `negative` magnitudes. While having input the
+   * magnitude would just oscilate towards that direction. So, if an entity
+   * collided at a high speed, the entity would bounce and, if input was still
+   * being given, move back towards whatever it bounced off of.
    */
 
   uint8_t _magnitude;  // Current speed up to T

@@ -40,6 +40,14 @@ protected:
     if (Input::_keystate[SDL_SCANCODE_D]) {
       _self->message(Message(_self, MOVE, RIGHT));
     }
+
+    /* if they aren't pressing any movement buttons */
+    if (!Input::_keystate[SDL_SCANCODE_W] && 
+        !Input::_keystate[SDL_SCANCODE_A] &&
+        !Input::_keystate[SDL_SCANCODE_S] &&
+        !Input::_keystate[SDL_SCANCODE_D]) {
+      _self->message(Message(_self, STOP));
+    }
   }
 };
 
