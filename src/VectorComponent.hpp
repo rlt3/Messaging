@@ -5,8 +5,8 @@
 
 class VectorComponent : public Component {
 public:
-  VectorComponent(Coordinate *c, State *state, int speed, Messageable *e, Messageable *r) 
-    : Component(e, r), _position(c), _state(state), _speed(speed)
+  VectorComponent(Coordinate *c, int speed, Messageable *e, Messageable *r) 
+    : Component(e, r), _force(0, 0), _position(c), _speed(speed)
   { }
 
   void message(const Message &msg)
@@ -17,11 +17,32 @@ public:
         break;
 
       case MOVE:
-        _direction = direction_by_state(msg.data<Direction>());
+        //_force = direction_by_state(msg.data<Direction>());
+        
+    printf("(%f, %f) + (%f, %f) => (%f, %f)\n", 
+        _force.x, _force.y,
+        direction_by_state(msg.data<Direction>()).x,
+        direction_by_state(msg.data<Direction>()).y,
+        _force.x, _force.y);
+
+        _force = direction_by_state(msg.data<Direction>());
+
+        //_force = Coordinate::add(_force, direction_by_state(msg.data<Direction>()));
         break;
 
+      case STOP:
+        _force = Coordinate(0, 0);
+        break;
+
+        /*
+         * When colliding, we need to have our magnitude (not direction as that
+         * is our guiding force), be manipulated into moving us backwards 
+         * temporarily. Perhaps just multiplying by 2 and then inversing the
+         * x and y is enough.
+         */
       case COLLIDE:
-        inverse_direction();
+        _magnitude.x = -(_magnitude.x * 2);
+        _magnitude.y = -(_magnitude.y * 2);
         break;
 
       default:
@@ -30,20 +51,39 @@ public:
   }
 
 protected:
-  void _oscilate_magnitude() {
-    if(*_state == MOVING && _magnitude <= _speed)
-      _magnitude += (_magnitude == _speed) ? 0 : 1;
-    else
-      _magnitude -= (_magnitude == 0) ? 0 : 1;
+
+  void stuff(Coordinate dir) {
+    /* need to xor the current _force with the new direction's force.
+     *
+     * this way instead of adding you only get one or zero for either of the
+     * two ordinates.
+     *
+     * exclusive or for positive and negative -- keep sign
+     */
+  }
+
+  float oscilate_coord(float force, float current) {
+    /* if there is a force and not max speed, add the force */
+    if (force != 0.0f && abs(current) <= _speed) {
+      return (current + force);
+    } else {
+    /* else bring current toward 0 from whatever direction (neg or pos) */
+      if (current == 0.0f) 
+        return current;
+      else
+        return (current + ((current < 0.0f) ? 1 : -1));
+    }
+  }
+
+  void _oscilate() {
+    _magnitude.x = oscilate_coord(_force.x, _magnitude.x);
+    _magnitude.y = oscilate_coord(_force.y, _magnitude.y);
+    *_position   = Coordinate::add(*_position, _magnitude);
   }
 
   void _move(uint32_t dt)
   {
-    _oscilate_magnitude();
-
-    *_position = Coordinate::add(*_position, 
-        Coordinate::multiply(_direction, _magnitude));
-    
+    _oscilate();
     _room->message(Message(_self, MOVEMENT, *_position));
   }
 
@@ -66,29 +106,10 @@ protected:
     }
   }
 
-  void inverse_direction() {
-    _direction.x = -_direction.x;
-    _direction.y = -_direction.y;
-  }
-
   Coordinate *_position;
-  Coordinate _direction;
+  Coordinate _force;
+  Coordinate _magnitude;
 
-  State *_state;
-
-  /* 
-   * Can combine magnitude/speed into a Coordinate which represents the 
-   * direction being moved and at what speed. While entity is moving, the
-   * magnitude rises to the speed at whatever direction and lower to 0 when
-   * not moving.
-   *
-   * We can use this to set `negative` magnitudes. While having input the
-   * magnitude would just oscilate towards that direction. So, if an entity
-   * collided at a high speed, the entity would bounce and, if input was still
-   * being given, move back towards whatever it bounced off of.
-   */
-
-  uint8_t _magnitude;  // Current speed up to T
   uint8_t _speed;      // <= T
 };
 
