@@ -22,14 +22,15 @@ enum message_t {
   DAMAGE
 };
 
-enum Direction {
+enum Input_t {
   UP,
   RIGHT,
   DOWN,
-  LEFT
+  LEFT,
+  USE
 };
 
-enum State {
+enum State_t {
   MOVING,
   IDLE,
 };

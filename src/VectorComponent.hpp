@@ -6,7 +6,7 @@
 class VectorComponent : public Component {
 public:
   VectorComponent(Coordinate *c, int speed, Messageable *e, Messageable *r) 
-    : Component(e, r), _force(0, 0), _position(c), _speed(speed)
+    : Component(e, r), _force(0, 0), _position(c), _max_speed(speed)
   { }
 
   void message(const Message &msg)
@@ -17,17 +17,13 @@ public:
         break;
 
       case MOVE:
-        //_force = direction_by_state(msg.data<Direction>());
-        
-    printf("(%f, %f) + (%f, %f) => (%f, %f)\n", 
-        _force.x, _force.y,
-        direction_by_state(msg.data<Direction>()).x,
-        direction_by_state(msg.data<Direction>()).y,
-        _force.x, _force.y);
-
-        _force = direction_by_state(msg.data<Direction>());
-
-        //_force = Coordinate::add(_force, direction_by_state(msg.data<Direction>()));
+        printf("(%f, %f) + (%f, %f) => (%f, %f)\n", 
+          _force.x, _force.y,
+          force_by_input(msg.data<Input_t>()).x,
+          force_by_input(msg.data<Input_t>()).y,
+          _force.x, _force.y);
+    
+        _or_force(force_by_input(msg.data<Input_t>()));
         break;
 
       case STOP:
@@ -52,19 +48,31 @@ public:
 
 protected:
 
-  void stuff(Coordinate dir) {
-    /* need to xor the current _force with the new direction's force.
-     *
-     * this way instead of adding you only get one or zero for either of the
-     * two ordinates.
-     *
-     * exclusive or for positive and negative -- keep sign
-     */
+  void _or_force(Coordinate dir)
+  {
+    Coordinate r;
+    r.x = (int)_force.x | (int)dir.x;
+    r.y = (int)_force.y | (int)dir.y;
+    _force = r;
   }
 
-  float oscilate_coord(float force, float current) {
+  void _move(uint32_t dt)
+  {
+    _oscilate();
+    _room->message(Message(_self, MOVEMENT, *_position));
+  }
+
+  void _oscilate() 
+  {
+    _magnitude.x = oscilate_ordinate(_force.x, _magnitude.x);
+    _magnitude.y = oscilate_ordinate(_force.y, _magnitude.y);
+    *_position   = Coordinate::add(*_position, _magnitude);
+  }
+
+  float oscilate_ordinate(float force, float current) 
+  {
     /* if there is a force and not max speed, add the force */
-    if (force != 0.0f && abs(current) <= _speed) {
+    if (force != 0.0f && abs(current) <= _max_speed) {
       return (current + force);
     } else {
     /* else bring current toward 0 from whatever direction (neg or pos) */
@@ -75,20 +83,9 @@ protected:
     }
   }
 
-  void _oscilate() {
-    _magnitude.x = oscilate_coord(_force.x, _magnitude.x);
-    _magnitude.y = oscilate_coord(_force.y, _magnitude.y);
-    *_position   = Coordinate::add(*_position, _magnitude);
-  }
-
-  void _move(uint32_t dt)
+  static Coordinate force_by_input(Input_t input)
   {
-    _oscilate();
-    _room->message(Message(_self, MOVEMENT, *_position));
-  }
-
-  static Coordinate direction_by_state(Direction dir) {
-    switch(dir) {
+    switch(input) {
       case UP :
         return Coordinate(0, -1);
 
@@ -106,11 +103,11 @@ protected:
     }
   }
 
-  Coordinate *_position;
-  Coordinate _force;
-  Coordinate _magnitude;
+  Coordinate *_position; /* current position */
+  Coordinate _force;     /* force object is being pushed */
+  Coordinate _magnitude; /* current magnitude of object */
 
-  uint8_t _speed;      // <= T
+  uint8_t _max_speed;
 };
 
 #endif

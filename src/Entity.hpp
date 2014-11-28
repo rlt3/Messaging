@@ -21,7 +21,7 @@ public:
 protected:
   Broadcaster<Entity> *_room;
   Coordinate           _position;
-  State                _state;
+  State_t              _state;
 };
 
 #endif
