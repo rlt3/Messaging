@@ -22,12 +22,15 @@ enum message_t {
   DAMAGE
 };
 
-enum Input_t {
-  UP,
-  RIGHT,
-  DOWN,
-  LEFT,
-  USE
+enum Direction {
+  NORTH,
+  NORTHEAST,
+  EAST,
+  SOUTHEAST,
+  SOUTH,
+  SOUTHWEST,
+  WEST,
+  NORTHWEST
 };
 
 enum State_t {

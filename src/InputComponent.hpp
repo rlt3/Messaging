@@ -25,28 +25,53 @@ public:
 protected:
   void _update() 
   {
-    if (Input::_keystate[SDL_SCANCODE_W]) {
-      _self->message(Message(_self, MOVE, UP));
-    }
-
-    if (Input::_keystate[SDL_SCANCODE_A]) {
-      _self->message(Message(_self, MOVE, LEFT));
-    }
-
-    if (Input::_keystate[SDL_SCANCODE_S]) {
-      _self->message(Message(_self, MOVE, DOWN));
-    }
-
-    if (Input::_keystate[SDL_SCANCODE_D]) {
-      _self->message(Message(_self, MOVE, RIGHT));
-    }
-
     /* if they aren't pressing any movement buttons */
     if (!Input::_keystate[SDL_SCANCODE_W] && 
         !Input::_keystate[SDL_SCANCODE_A] &&
         !Input::_keystate[SDL_SCANCODE_S] &&
         !Input::_keystate[SDL_SCANCODE_D]) {
       _self->message(Message(_self, STOP));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_W] && Input::_keystate[SDL_SCANCODE_A]) {
+      _self->message(Message(_self, MOVE, NORTHWEST));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_W] && Input::_keystate[SDL_SCANCODE_D]) {
+      _self->message(Message(_self, MOVE, NORTHEAST));
+      return;
+    }
+    
+    if (Input::_keystate[SDL_SCANCODE_S] && Input::_keystate[SDL_SCANCODE_A]) {
+      _self->message(Message(_self, MOVE, SOUTHWEST));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_S] && Input::_keystate[SDL_SCANCODE_D]) {
+      _self->message(Message(_self, MOVE, SOUTHEAST));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_W]) {
+      _self->message(Message(_self, MOVE, NORTH));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_A]) {
+      _self->message(Message(_self, MOVE, WEST));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_S]) {
+      _self->message(Message(_self, MOVE, SOUTH));
+      return;
+    }
+
+    if (Input::_keystate[SDL_SCANCODE_D]) {
+      _self->message(Message(_self, MOVE, EAST));
+      return;
     }
   }
 };

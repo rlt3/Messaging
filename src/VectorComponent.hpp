@@ -16,26 +16,17 @@ public:
         _move(msg.data<uint32_t>());
         break;
 
+      /* Apply a force in the direction of input */
       case MOVE:
-        printf("(%f, %f) + (%f, %f) => (%f, %f)\n", 
-          _force.x, _force.y,
-          force_by_input(msg.data<Input_t>()).x,
-          force_by_input(msg.data<Input_t>()).y,
-          _force.x, _force.y);
-    
-        _or_force(force_by_input(msg.data<Input_t>()));
+        _force = force_by_input(msg.data<Direction>());
         break;
 
+      /* Set no force if we're stopping */
       case STOP:
         _force = Coordinate(0, 0);
         break;
 
-        /*
-         * When colliding, we need to have our magnitude (not direction as that
-         * is our guiding force), be manipulated into moving us backwards 
-         * temporarily. Perhaps just multiplying by 2 and then inversing the
-         * x and y is enough.
-         */
+      /* Based on our magnitude, bounce backwards off the object */
       case COLLIDE:
         _magnitude.x = -(_magnitude.x * 2);
         _magnitude.y = -(_magnitude.y * 2);
@@ -48,20 +39,14 @@ public:
 
 protected:
 
-  void _or_force(Coordinate dir)
-  {
-    Coordinate r;
-    r.x = (int)_force.x | (int)dir.x;
-    r.y = (int)_force.y | (int)dir.y;
-    _force = r;
-  }
-
+  /* move entity and broadcast the new position */
   void _move(uint32_t dt)
   {
     _oscilate();
     _room->message(Message(_self, MOVEMENT, *_position));
   }
 
+  /* handle the speed up of an entity and its forces */
   void _oscilate() 
   {
     _magnitude.x = oscilate_ordinate(_force.x, _magnitude.x);
@@ -83,20 +68,32 @@ protected:
     }
   }
 
-  static Coordinate force_by_input(Input_t input)
+  static Coordinate force_by_input(Direction d)
   {
-    switch(input) {
-      case UP :
+    switch(d) {
+      case NORTH :
         return Coordinate(0, -1);
 
-      case RIGHT :
+      case NORTHEAST : 
+        return Coordinate(1, -1);
+
+      case EAST :
         return Coordinate(1, 0);
 
-      case DOWN :
+      case SOUTHEAST : 
+        return Coordinate(1, 1);
+
+      case SOUTH :
         return Coordinate(0, 1);
 
-      case LEFT :
+      case SOUTHWEST : 
+        return Coordinate(-1, 1);
+
+      case WEST :
         return Coordinate(-1, 0);
+
+      case NORTHWEST :
+        return Coordinate(-1, -1);
 
       default:
         return Coordinate(0, 0);
