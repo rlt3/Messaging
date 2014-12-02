@@ -10,6 +10,8 @@ enum message_t {
   RENDER,
   DRAW,
 
+  ADD,
+
   /* Within Entity */
   MOVE,     /* turn entity */
   STOP,     /* stop entity */

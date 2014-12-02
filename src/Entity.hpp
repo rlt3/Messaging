@@ -7,7 +7,7 @@
 
 class Entity : public Broadcaster<Component> {
 public:
-  Entity(Broadcaster<Entity> *room, std::string s) 
+  Entity(Messageable *room, std::string s) 
     : Broadcaster<Component>()
     , _room(room)
   { 
@@ -17,7 +17,7 @@ public:
   ~Entity() { }
 
 protected:
-  Broadcaster<Entity> *_room;
+  Messageable *_room;
 };
 
 #endif

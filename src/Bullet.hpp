@@ -9,7 +9,7 @@
 
 class Bullet : public Entity {
 public:
-  Bullet(Broadcaster<Entity> *room, float x, float y, Coordinate direction) 
+  Bullet(Messageable *room, float x, float y, Coordinate direction) 
     : Entity(room, "Bullet")
   { 
     _messageables.push_back(new GraphicsComponent(x, y, 255, 0, 0, this, room));

@@ -9,7 +9,7 @@
 
 class Monster : public Entity {
 public:
-  Monster(Broadcaster<Entity> *room, float x, float y) 
+  Monster(Messageable *room, float x, float y) 
     : Entity(room, "Monster")
   { 
     _messageables.push_back(new GraphicsComponent(x, y, 0, 0, 0, this, room));

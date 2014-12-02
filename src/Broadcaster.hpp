@@ -22,10 +22,9 @@ public:
     }
   }
 
-  T* add(T *e)
+  void add(T *e)
   {
     _messageables.push_back(e);
-    return e;
   }
 
   virtual void message(const Message &msg)
@@ -38,11 +37,10 @@ protected:
 
   void _broadcast(const Message &msg)
   {
-    iterator m;
-    for(m = _messageables.begin(); m != _messageables.end(); ++m) {
-      /* Don't message the sender */
-      if (msg.sender != (*m)) {
-        (*m)->message(msg);
+    /* use an index instea of iterator because adding elems invalidates iter */
+    for (size_t i = 0; i < _messageables.size(); i++) {
+      if (msg.sender != _messageables[i]) {
+        _messageables[i]->message(msg);
       }
     }
   }

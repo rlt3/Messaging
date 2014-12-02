@@ -15,6 +15,19 @@ public:
 
   ~Room() { }
 
+  void message(const Message &msg)
+  {
+    switch(msg.type) {
+      case ADD:
+        add(msg.data<Entity*>());
+        break;
+
+      default:
+        _broadcast(msg);
+        break;
+    }
+  }
+
 private:
   Messageable *_game;
 };
