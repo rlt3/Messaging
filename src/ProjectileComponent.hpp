@@ -22,6 +22,7 @@ public:
 
       case COLLIDE:
         msg.sender->message(Message(_self, DAMAGE, 10));
+        _room->message(Message(_self, DEATH));
         _magnitude = Coordinate(0, 0);
         break;
 

@@ -5,22 +5,31 @@
 
 class HealthComponent : public Component {
 public:
-  HealthComponent(Messageable *e, Messageable *r) : Component(e, r) { }
+  HealthComponent(Messageable *e, Messageable *r)
+    : Component(e, r) 
+    , _health(50)
+  { }
 
   void message(const Message &msg)
   {
-    int d;
-
     switch(msg.type) {
       case DAMAGE:
-        d = msg.data<int>();
-        std::cout << _self->name << " was dealt " << d << " damage by " << msg.sender->name << "." << std::endl;
+        _health -= msg.data<int>();
+
+        if (_health <= 0) {
+          _room->message(Message(_self, DEATH));
+        }
+
         break;
 
       default:
         break;
     }
   }
+
+protected:
+  int _health;
+
 };
 
 #endif

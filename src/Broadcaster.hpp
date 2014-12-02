@@ -22,11 +22,6 @@ public:
     }
   }
 
-  void add(T *e)
-  {
-    _messageables.push_back(e);
-  }
-
   virtual void message(const Message &msg)
   {
     _broadcast(msg);
@@ -45,9 +40,15 @@ protected:
     }
   }
 
-  /* might need to make these pointers */
-  //void _add(T &m);
-  //void _remove(T &m);
+  void _add(T *e)
+  {
+    _messageables.push_back(e);
+  }
+  
+  void _remove(T *e)
+  {
+    _messageables.erase(find(_messageables.begin(), _messageables.end(), e));
+  }
 };
 
 #endif

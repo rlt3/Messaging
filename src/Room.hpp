@@ -9,8 +9,8 @@ class Room : public Broadcaster<Entity> {
 public:
   Room(Messageable *e) : _game(e), Broadcaster<Entity>() 
   { 
-    add(new Player(this, 300, 220));
-    add(new Monster(this, 300, 300));
+    _add(new Player(this, 300, 220));
+    _add(new Monster(this, 300, 300));
   }
 
   ~Room() { }
@@ -19,7 +19,11 @@ public:
   {
     switch(msg.type) {
       case ADD:
-        add(msg.data<Entity*>());
+        _add(msg.data<Entity*>());
+        break;
+
+      case DEATH:
+        _remove((Entity*) msg.sender);
         break;
 
       default:

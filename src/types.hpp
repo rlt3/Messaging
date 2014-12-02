@@ -11,6 +11,7 @@ enum message_t {
   DRAW,
 
   ADD,
+  DEATH,
 
   /* Within Entity */
   MOVE,     /* turn entity */

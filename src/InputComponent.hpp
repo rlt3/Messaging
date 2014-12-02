@@ -25,7 +25,8 @@ public:
 protected:
   void _update() 
   {
-    if (Input::_keystate[SDL_SCANCODE_SPACE]) {
+    //if (Input::_keystate[SDL_SCANCODE_SPACE]) {
+    if (Input::_keystate[SDL_SCANCODE_E]) {
       _self->message(Message(_self, ACTION));
     }
 
