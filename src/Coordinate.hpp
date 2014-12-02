@@ -24,25 +24,37 @@ struct Coordinate {
     return Coordinate(l.x * scale, l.y * scale);
   }
 
-  //void add(const Coordinate &rhs) {
-  //  x += rhs.x;
-  //  y += rhs.y;
-  //}
+  static Coordinate by_direction(Direction d)
+  {
+    switch(d) {
+      case NORTH :
+        return Coordinate(0, -1);
 
-  //void add(const float &scale) {
-  //  x += scale;
-  //  y += scale;
-  //}
+      case NORTHEAST : 
+        return Coordinate(1, -1);
 
-  //void multiply(const Coordinate &rhs) {
-  //  x *= rhs.x;
-  //  y *= rhs.y;
-  //}
+      case EAST :
+        return Coordinate(1, 0);
 
-  //void multiply(const float &scale) {
-  //  x *= scale;
-  //  y *= scale;
-  //}
+      case SOUTHEAST : 
+        return Coordinate(1, 1);
+
+      case SOUTH :
+        return Coordinate(0, 1);
+
+      case SOUTHWEST : 
+        return Coordinate(-1, 1);
+
+      case WEST :
+        return Coordinate(-1, 0);
+
+      case NORTHWEST :
+        return Coordinate(-1, -1);
+
+      default:
+        return Coordinate(0, 0);
+    }
+  }
 };
 
 #endif

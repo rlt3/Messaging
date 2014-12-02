@@ -22,6 +22,12 @@ public:
     }
   }
 
+  T* add(T *e)
+  {
+    _messageables.push_back(e);
+    return e;
+  }
+
   virtual void message(const Message &msg)
   {
     _broadcast(msg);

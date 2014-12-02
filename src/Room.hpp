@@ -15,12 +15,6 @@ public:
 
   ~Room() { }
 
-  Entity* add(Entity *e)
-  {
-    _messageables.push_back(e);
-    return e;
-  }
-
 private:
   Messageable *_game;
 };

@@ -11,8 +11,10 @@ enum message_t {
   DRAW,
 
   /* Within Entity */
-  MOVE,
-  STOP,
+  MOVE,     /* turn entity */
+  STOP,     /* stop entity */
+  POSITION, /* update position */
+  ACTION,   /* do entity's action */
 
   /* Between Entities */
   MOVEMENT,

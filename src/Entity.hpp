@@ -7,11 +7,9 @@
 
 class Entity : public Broadcaster<Component> {
 public:
-  Entity(Broadcaster<Entity> *room, float x, float y, std::string s) 
+  Entity(Broadcaster<Entity> *room, std::string s) 
     : Broadcaster<Component>()
     , _room(room)
-    , _position(Coordinate(x, y))
-    , _state(IDLE)
   { 
     name = s;
   }
@@ -20,8 +18,6 @@ public:
 
 protected:
   Broadcaster<Entity> *_room;
-  Coordinate           _position;
-  State_t              _state;
 };
 
 #endif

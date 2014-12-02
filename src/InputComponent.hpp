@@ -25,6 +25,10 @@ public:
 protected:
   void _update() 
   {
+    if (Input::_keystate[SDL_SCANCODE_SPACE]) {
+      _self->message(Message(_self, ACTION));
+    }
+
     /* if they aren't pressing any movement buttons */
     if (!Input::_keystate[SDL_SCANCODE_W] && 
         !Input::_keystate[SDL_SCANCODE_A] &&

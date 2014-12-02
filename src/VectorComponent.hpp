@@ -5,8 +5,11 @@
 
 class VectorComponent : public Component {
 public:
-  VectorComponent(Coordinate *c, int speed, Messageable *e, Messageable *r) 
-    : Component(e, r), _force(0, 0), _position(c), _max_speed(speed)
+  VectorComponent(float x, float y, int speed, Messageable *e, Messageable *r) 
+    : _position(x, y)
+    , _max_speed(speed)
+    , _force(0, 0)
+    , Component(e, r)
   { }
 
   void message(const Message &msg)
@@ -18,7 +21,7 @@ public:
 
       /* Apply a force in the direction of input */
       case MOVE:
-        _force = force_by_input(msg.data<Direction>());
+        _force = Coordinate::by_direction(msg.data<Direction>());
         break;
 
       /* Set no force if we're stopping */
@@ -43,7 +46,10 @@ protected:
   void _move(uint32_t dt)
   {
     _oscilate();
-    _room->message(Message(_self, MOVEMENT, *_position));
+
+    /* broadcast to self our new position and to room */
+    _room->message(Message(_self, MOVEMENT, _position));
+    _self->message(Message(_self, POSITION, _position));
   }
 
   /* handle the speed up of an entity and its forces */
@@ -51,7 +57,7 @@ protected:
   {
     _magnitude.x = oscilate_ordinate(_force.x, _magnitude.x);
     _magnitude.y = oscilate_ordinate(_force.y, _magnitude.y);
-    *_position   = Coordinate::add(*_position, _magnitude);
+    _position    = Coordinate::add(_position, _magnitude);
   }
 
   float oscilate_ordinate(float force, float current) 
@@ -68,39 +74,7 @@ protected:
     }
   }
 
-  static Coordinate force_by_input(Direction d)
-  {
-    switch(d) {
-      case NORTH :
-        return Coordinate(0, -1);
-
-      case NORTHEAST : 
-        return Coordinate(1, -1);
-
-      case EAST :
-        return Coordinate(1, 0);
-
-      case SOUTHEAST : 
-        return Coordinate(1, 1);
-
-      case SOUTH :
-        return Coordinate(0, 1);
-
-      case SOUTHWEST : 
-        return Coordinate(-1, 1);
-
-      case WEST :
-        return Coordinate(-1, 0);
-
-      case NORTHWEST :
-        return Coordinate(-1, -1);
-
-      default:
-        return Coordinate(0, 0);
-    }
-  }
-
-  Coordinate *_position; /* current position */
+  Coordinate _position; /* current position */
   Coordinate _force;     /* force object is being pushed */
   Coordinate _magnitude; /* current magnitude of object */
 
