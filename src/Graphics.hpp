@@ -17,9 +17,11 @@ protected:
 private:
   static SDL_Window       *_window;
   static SDL_RendererInfo  _renderer_info;
+  static bool              _initialized;
 
   void _clear();
   void _render();
+  void _init();
   
   Messageable *_game;
 

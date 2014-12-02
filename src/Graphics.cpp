@@ -3,13 +3,13 @@
 SDL_Renderer     * Graphics::_renderer;
 SDL_Window       * Graphics::_window;
 SDL_RendererInfo   Graphics::_renderer_info;
+bool               Graphics::_initialized = false;
 
 Graphics::Graphics(Messageable *g) : _game(g)
 {
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_CreateWindowAndRenderer(800, 600, SDL_WINDOW_SHOWN, 
-      &Graphics::_window, &Graphics::_renderer);
-  SDL_GetRendererInfo(Graphics::_renderer, &Graphics::_renderer_info);
+  if (!Graphics::_initialized) {
+    _init();
+  }
 }
 
 Graphics::~Graphics()
@@ -41,4 +41,14 @@ void Graphics::_clear()
 void Graphics::_render()
 {
   SDL_RenderPresent(Graphics::_renderer);
+}
+
+void Graphics::_init()
+{
+  Graphics::_initialized = true;
+
+  SDL_Init(SDL_INIT_VIDEO);
+  SDL_CreateWindowAndRenderer(800, 600, SDL_WINDOW_SHOWN, 
+      &Graphics::_window, &Graphics::_renderer);
+  SDL_GetRendererInfo(Graphics::_renderer, &Graphics::_renderer_info);
 }

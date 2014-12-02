@@ -16,10 +16,10 @@ public:
   Broadcaster() { }
   ~Broadcaster() 
   { 
-    iterator m;
-    for(m = _messageables.begin(); m != _messageables.end(); ++m) {
-      delete (*m);
+    for (size_t i = 0; i < _messageables.size(); i++) {
+      delete _messageables[i];
     }
+    _messageables.clear();
   }
 
   virtual void message(const Message &msg)
@@ -32,7 +32,6 @@ protected:
 
   void _broadcast(const Message &msg)
   {
-    /* use an index instea of iterator because adding elems invalidates iter */
     for (size_t i = 0; i < _messageables.size(); i++) {
       if (msg.sender != _messageables[i]) {
         _messageables[i]->message(msg);
