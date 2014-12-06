@@ -2,23 +2,24 @@
 #define SLOW_COLLISIONCOMPONENT_HPP
 
 #include "Component.hpp"
+#include "Body.hpp"
 
 class CollisionComponent : public Component {
 public:
-  CollisionComponent(float x, float y, Messageable *e, Messageable *r) 
-    : _position(x, y) 
-    , Component(e, r)
+  CollisionComponent(Body b, Messageable *self, Messageable *room) 
+    : _body(b)
+    , Component(self, room)
   { }
 
   void message(const Message &msg)
   {
     switch(msg.type) {
       case MOVEMENT:
-        _collision_detect(msg.sender, msg.data<Coordinate>());
+        _collision_detect(msg.sender, msg.data<Body>());
         break;
 
       case POSITION:
-        _position = msg.data<Coordinate>();
+        _body = msg.data<Body>();
         break;
 
       case ATTACK:
@@ -33,17 +34,17 @@ public:
   }
 
 protected:
-  void _collision_detect(Messageable *other, Coordinate c)
+  void _collision_detect(Messageable *other, Body b)
   {
-    if (_position.x < c.x + 50 &&
-        _position.x + 50 > c.x &&
-        _position.y < c.y + 50 &&
-        _position.y + 50 > c.y) {
-      other->message(Message(_self, COLLIDE));
+    if (_body.position.x < b.position.x + b.w &&
+        _body.position.x + _body.w > b.position.x &&
+        _body.position.y < b.position.y + b.h &&
+        _body.position.y + _body.h > b.position.y) {
+      other->message(Message(_self, COLLIDE, _body));
     }
   }
 
-  Coordinate _position;
+  Body _body;
 };
 
 #endif

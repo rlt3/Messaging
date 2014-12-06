@@ -32,18 +32,20 @@
 #include "Entity.hpp"
 
 #include "GraphicsComponent.hpp"
-#include "BarVectorComponent.hpp"
-#include "BarCollisionComponent.hpp"
+#include "CollisionComponent.hpp"
+#include "VectorComponent.hpp"
+#include "ProjectileComponent.hpp"
+
 #include "InputComponent.hpp"
 
 class Ball : public Entity {
 public:
-  Ball(Messageable *room, float x, float y) 
+  Ball(Messageable *room, Body b) 
     : Entity(room, "Ball")
   { 
-    _messageables.push_back(new GraphicsComponent(x, y, 255, 255, 255, this, room));
-    _messageables.push_back(new BallVectorComponent(x, y, 10, this, room));
-    _messageables.push_back(new BallCollisionComponent(x, y, this, room));
+    _messageables.push_back(new GraphicsComponent(b, 255, 255, 255, this, room));
+    _messageables.push_back(new CollisionComponent(b, this, room));
+    _messageables.push_back(new ProjectileComponent(b, 10, this, room));
   }
 };
 

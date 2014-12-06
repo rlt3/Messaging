@@ -3,16 +3,15 @@
 
 #include "Graphics.hpp"
 #include "Component.hpp"
-#include "Coordinate.hpp"
+#include "Body.hpp"
 
 class GraphicsComponent : public Component, protected Graphics {
 public:
-  GraphicsComponent(float x, float y, int red, int green, int blue, 
-                    Messageable *e, Messageable *r) 
-    : _position(x, y)
-    , _direction(Coordinate::by_direction(SOUTH))
-    , Component(e, r)
-    , Graphics(e)
+  GraphicsComponent(Body b, int red, int green, int blue, 
+                    Messageable *self, Messageable *room) 
+    : _body(b)
+    , Component(self, room)
+    , Graphics(self)
     , _r(red)
     , _g(green)
     , _b(blue) 
@@ -26,11 +25,7 @@ public:
         break;
         
       case POSITION:
-        _position = msg.data<Coordinate>();
-        break;
-
-      case MOVE:
-        _direction = Coordinate::by_direction(msg.data<Direction>());
+        _body = msg.data<Body>();
         break;
 
       default:
@@ -44,16 +39,15 @@ protected:
     SDL_SetRenderDrawColor(Graphics::_renderer, _r, _g, _b, 255);
 
     SDL_Rect r;
-    r.x = _position.x;
-    r.y = _position.y;
-    r.w = 50;
-    r.h = 50;
+    r.x = _body.position.x;
+    r.y = _body.position.y;
+    r.w = _body.w;
+    r.h = _body.h;
 
     SDL_RenderFillRect(Graphics::_renderer, &r);
   }
 
-  Coordinate _position;
-  Coordinate _direction;
+  Body _body;
 
   int _r;
   int _g;

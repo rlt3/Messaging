@@ -2,15 +2,15 @@
 #define SLOW_PROJECTILECOMPONENT_HPP
 
 #include "Component.hpp"
+#include "Body.hpp"
 
 class ProjectileComponent : public Component {
 public:
-  ProjectileComponent(float x, float y, Coordinate direction, int speed, 
-                      Messageable *e, Messageable *r) 
-    : Component(e, r), _position(x, y)
+  ProjectileComponent(Body b, int speed, Messageable *e, Messageable *r) 
+    : Component(e, r), _body(b)
   { 
     /* set the magnitude, based on direction and speed, which stays constant */
-    _magnitude = Coordinate::multiply(direction, speed);
+    _body.magnitude = Coordinate::multiply(_body.direction, speed);
   }
 
   void message(const Message &msg)
@@ -21,9 +21,11 @@ public:
         break;
 
       case COLLIDE:
-        msg.sender->message(Message(_self, DAMAGE, 10));
-        _room->message(Message(_self, DEATH));
-        _magnitude = Coordinate(0, 0);
+        _collision(msg.data<Body>());
+        break;
+
+      case POSITION:
+        _body = msg.data<Body>();
         break;
 
       default:
@@ -36,13 +38,19 @@ protected:
   /* move entity and broadcast the new position */
   void _move(uint32_t dt)
   {
-    _position = Coordinate::add(_position, _magnitude);
-    _room->message(Message(_self, MOVEMENT, _position));
-    _self->message(Message(_self, POSITION, _position));
+    _body.position = Coordinate::add(_body.position, _body.magnitude);
+    _room->message(Message(_self, MOVEMENT, _body));
+    _self->message(Message(_self, POSITION, _body));
   }
 
-  Coordinate _position; 
-  Coordinate _magnitude;
+  void _collision(Body other) 
+  {
+    /* use other body's magnitude so we can slice the ball, etc */
+    _body.magnitude.x = -(_body.magnitude.x);
+    _body.magnitude.y = -(_body.magnitude.y);
+  }
+
+  Body _body;
 };
 
 #endif
