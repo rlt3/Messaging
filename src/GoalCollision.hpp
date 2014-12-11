@@ -1,12 +1,12 @@
-#ifndef SLOW_COLLISIONCOMPONENT_HPP
-#define SLOW_COLLISIONCOMPONENT_HPP
+#ifndef SLOW_GOAL_COLLISIONCOMPONENT_HPP
+#define SLOW_GOAL_COLLISIONCOMPONENT_HPP
 
 #include "Component.hpp"
 #include "Body.hpp"
 
-class CollisionComponent : public Component {
+class GoalCollisionComponent : public Component {
 public:
-  CollisionComponent(Body b, Messageable *self, Messageable *room) 
+  GoalCollisionComponent(Body b, Messageable *self, Messageable *room) 
     : _body(b)
     , Component(self, room)
   { }
@@ -41,6 +41,7 @@ protected:
         _body.position.y < b.position.y + b.h &&
         _body.position.y + _body.h > b.position.y) {
       other->message(Message(_self, COLLIDE, _body));
+      _room->message(Message(_self, SCORE));
     }
   }
 
@@ -48,3 +49,4 @@ protected:
 };
 
 #endif
+

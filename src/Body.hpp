@@ -30,6 +30,14 @@ struct Body {
     , magnitude(0, 0)
     , direction(Coordinate::by_direction(EAST))
   { }
+
+  Body(int w, int h, float x, float y, Coordinate d) 
+    : w(w)
+    , h(h)
+    , position(x, y) 
+    , magnitude(0, 0)
+    , direction(d)
+  { }
 };
 
 #endif

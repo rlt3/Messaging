@@ -13,6 +13,8 @@ enum message_t {
   ADD,
   DEATH,
 
+  SCORE,
+
   /* Within Entity */
   MOVE,     /* turn entity */
   STOP,     /* stop entity */
