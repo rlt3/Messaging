@@ -15,7 +15,7 @@ public:
   {
     switch(msg.type) {
       case MOVEMENT:
-        _collision_detect(msg.sender, msg.data<Body>());
+        _detect_collision(msg.sender, msg.data<Body>());
         break;
 
       case POSITION:
@@ -34,14 +34,17 @@ public:
   }
 
 protected:
-  void _collision_detect(Messageable *other, Body b)
-  {
-    if (_body.position.x < b.position.x + b.w &&
-        _body.position.x + _body.w > b.position.x &&
-        _body.position.y < b.position.y + b.h &&
-        _body.position.y + _body.h > b.position.y) {
+  virtual void _detect_collision(Messageable *other, Body b) {
+    if (_collision(other, b)) 
       other->message(Message(_self, COLLIDE, _body));
-    }
+  }
+
+  bool _collision(Messageable *other, Body b)
+  {
+    return (_body.position.x < b.position.x + b.w &&
+            _body.position.x + _body.w > b.position.x &&
+            _body.position.y < b.position.y + b.h &&
+            _body.position.y + _body.h > b.position.y);
   }
 
   Body _body;

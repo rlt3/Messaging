@@ -45,7 +45,6 @@ public:
         break;
 
       case SCORE:
-        printf("going up\n");
         _update_score();
         break;
 
