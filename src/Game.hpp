@@ -5,7 +5,6 @@
 #define THIRTY_FPS       (ONE_SECOND/30)
 #define FIFTEEN_FPS      (ONE_SECOND/15)
 
-
 #include <iostream>
 
 #include "Broadcaster.hpp"
