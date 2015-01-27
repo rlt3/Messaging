@@ -26,6 +26,8 @@ enum MessageType {
 
   CLICKED,
   UNCLICKED,
+  HOVER,
+  UNHOVER,
 
   PLACE
 };

@@ -19,11 +19,11 @@ public:
         break;
 
       case COLLISION_TRUE:
-        _parent->message(Message(this, STATE, 1));
+        _self->message(Message(this, HOVER));
         break;
 
       case COLLISION_FALSE:
-        _parent->message(Message(this, STATE, 0));
+        _self->message(Message(this, UNHOVER));
         break;
 
       default:

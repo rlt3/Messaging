@@ -4,6 +4,12 @@
 #include "menu.hpp"
 #include "room.hpp"
 
+/*
+ * to be able to do a menu that pops up over a paused game screen, how about 
+ * just getting a texture of the current window/renderer and then using that
+ * as the background of the menu?
+ */
+
 class Game : public Component {
 public:
   Game() : Component(), pointer(0)
