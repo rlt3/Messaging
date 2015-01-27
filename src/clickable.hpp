@@ -19,12 +19,15 @@ public:
         break;
 
       case MOUSE_UNCLICK:
-        _parent->message(Message(this, UNCLICKED));
+        _self->message(Message(this, UNCLICKED));
         break;
 
       case COLLISION_TRUE:
-        _parent->message(Message(this, CLICKED));
+        _self->message(Message(this, CLICKED));
         break;
+
+      default:
+        _broadcast(msg);
     }
   }
 

@@ -2,26 +2,19 @@
 #define SLOW_COLLISION_HPP
 
 #include "component.hpp"
-#include "sdl_bindings.hpp"
+#include "graphics.hpp"
 
 class Collision : public Component {
 public:
   Collision(Component* p) : Component(p) 
   { 
-    _body = { 0, 0, SPRITE, SPRITE };
+    _body = { 0, 0, SPRITE_SIZE, SPRITE_SIZE };
   }
 
   void message(const Message &msg)
   {
     switch(msg.type)
     {
-
-      /*
-       * May handle extra like:
-       *  POINT_INSIDE -
-       *  for gui (cursor) interaction among other things
-       */
-
       case IS_COLLISION:
         _check_collision(msg.data<Rect>());
         break;
@@ -39,9 +32,9 @@ protected:
   void _check_collision(Rect r)
   {
     if (_collision_at(r))
-      _parent->message(Message(this, COLLISION_TRUE));
+      _self->message(Message(this, COLLISION_TRUE));
     else
-      _parent->message(Message(this, COLLISION_FALSE));
+      _self->message(Message(this, COLLISION_FALSE));
   }
 
   bool _collision_at(Rect r)

@@ -6,47 +6,45 @@
 
 class Game : public Component {
 public:
-  Game() : Component(), loop_pointer(0)
+  Game() : Component(), pointer(0)
   {
-    loops[0] = new Menu(this);
-    loops[1] = new Room(this);
-
-    /* so the vector takes care of the lifetime of the object */
-    _add(loops[0]);
-    _add(loops[1]);
+    _add(new Menu(this));
+    _add(new Room(this));
   }
 
   void message(const Message &msg)
   {
+    /*
+     * TODO:
+     *  - Some sort of `curtain' which uses alpha transparency that goes from
+     *  255 to 0 over a set period of time allowing for all other components
+     *  to `work' normally until the curtain is `drawn', effectively changing
+     *  the scene.
+     *
+     *  So, we would like to be able to see the button being pushed down for a
+     *  brief period before starting the game. 
+     */
+
     switch (msg.type)
     {
-      case INPUT:
-        handle_input(msg.data<int>());
+      case START:
+        pointer = 1;
         break;
 
-      case START:
-        loop_pointer = 1;
+      case PAUSE:
+        pointer = 0;
         break;
 
       default:
-        loops[loop_pointer]->message(msg);
+        /* use the std::vector's [] overloading to access element n */
+        _components[pointer]->message(msg);
         break;
     }
   }
 
 protected:
-  Component *loops[2];
-  short unsigned int loop_pointer;
+  short unsigned int pointer;
 
-  void handle_input(int key)
-  {
-    switch(key)
-    {
-      case ESC_KEY:
-        loop_pointer = 0;
-        break;
-    }
-  }
 };
 
 #endif
