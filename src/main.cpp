@@ -24,8 +24,8 @@ int main (void)
             running = false;
             break;
 
-          default:
-            //game.message(Message(&game, INPUT, key_event()));
+          case W_KEY: case A_KEY: case S_KEY: case D_KEY: case SPACE_KEY:
+            game.message(Message(&game, INPUT, key_event()));
             break;
         }
         break;
@@ -33,8 +33,8 @@ int main (void)
       case KEYUP_EVENT:
         switch (key_event())
         {
-          case W_KEY: case A_KEY: case S_KEY: case D_KEY:
-            //game.message(Message(&game, STOP));
+          case W_KEY: case A_KEY: case S_KEY: case D_KEY: case SPACE_KEY:
+            game.message(Message(&game, DEPUT, key_event()));
             break;
         }
         break;
@@ -57,7 +57,7 @@ int main (void)
 
     if (current_time - last_time > THIRTY_FPS) 
     {
-      //game.message(Message(&game, 0, (current_time - last_time)));
+      game.message(Message(&game, UPDATE, (current_time - last_time)));
       last_time = current_time;
     }
 

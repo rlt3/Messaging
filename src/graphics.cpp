@@ -137,6 +137,13 @@ void draw_rect(int x, int y, int w, int h)
   SDL_RenderFillRect(_renderer, &r); 
 }
 
+int texture_width(SDL_Texture* texture)
+{
+  int w;
+  SDL_QueryTexture(texture, NULL, NULL, &w, NULL);
+  return w;
+}
+
 void destroy_texture(SDL_Texture* texture)
 {
   SDL_DestroyTexture(texture);

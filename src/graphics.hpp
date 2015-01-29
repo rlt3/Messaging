@@ -2,6 +2,7 @@
 #define SLOW_SDL_H
 
 #define THIRTY_FPS    1000/30
+#define FRAME_TIME    125
 #define SPRITE_SIZE   64
 #define WINDOW_WIDTH  832
 #define WINDOW_HEIGHT 704
@@ -41,6 +42,7 @@ void create_window();
 void clear_window();
 void render_window();
 void destroy_texture(SDL_Texture* texture);
+int texture_width(SDL_Texture* texture);
 void destroy_window();
 
 int  window_event();

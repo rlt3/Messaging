@@ -11,10 +11,21 @@ enum MessageType {
   PAUSE,
   QUIT,
 
+  UPDATE,
   DRAW,
 
-  POSITION,
+  POSITION,  // x,y
+  BODY,      // w,h
+
+  MOVE,
   STATE,
+  STOP,
+
+  ANIMATE,
+  ANIMATION_DONE,
+
+  INPUT,
+  DEPUT,
 
   MOUSE_HOVER,
   MOUSE_CLICK,
