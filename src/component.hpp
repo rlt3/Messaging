@@ -18,6 +18,7 @@ enum MessageType {
   BODY,      // w,h
 
   MOVE,
+  ATTACK,
   STATE,
   STOP,
 

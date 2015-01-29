@@ -116,10 +116,6 @@ protected:
     if (animating && elapsed_time >= FRAME_TIME)
     {
       elapsed_time = 0;
-      /* TODO: Update to accomodate different frame lengths (attack vs walk) 
-       *  May be able to deduce from texture length? Given width of sprite
-       *  being drawn and divide that by texture width?
-       */
       frame = ++frame % max_frames;
     }
 
@@ -164,8 +160,8 @@ protected:
    */
   void set_position(Rect r)
   {
-    position.x = r.x - x_offset;
-    position.y = r.y - y_offset;
+    position.x = r.x + x_offset;
+    position.y = r.y + y_offset;
     position.w = width;
     position.h = height;
   }

@@ -3,6 +3,7 @@
 
 #include "sprite.hpp"
 #include "vector.hpp"
+#include "weapon.hpp"
 
 class Player : public Component {
 public:
@@ -10,6 +11,7 @@ public:
   {
     _add(new Sprite("player.png", this));
     _add(new Vector(3, this));
+    _add(new Weapon(this));
 
     _broadcast(Message(this, POSITION, rect(64, 64, 64, 64)));
   }
@@ -50,6 +52,10 @@ protected:
         break;
 
       case SPACE_KEY:
+        /* TODO: Make a weapon component which handles the ATTACK animation 
+         * along with the animation of the attack
+         */
+        _broadcast(Message(this, ATTACK, direction));
         _broadcast(Message(this, ANIMATE, direction + 4));
         break;
 
