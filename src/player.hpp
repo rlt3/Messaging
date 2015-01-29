@@ -1,17 +1,16 @@
 #ifndef SLOW_PLAYER_HPP
 #define SLOW_PLAYER_HPP
 
-#include "sprite.hpp"
 #include "vector.hpp"
+#include "animation.hpp"
 #include "weapon.hpp"
 
 class Player : public Component {
 public:
   Player(Component* s) : Component(s)
   {
-    _add(new Sprite("player.png", this));
     _add(new Vector(3, this));
-    _add(new Weapon(this));
+    _add(new Animation(this));
 
     _broadcast(Message(this, POSITION, rect(64, 64, 64, 64)));
   }
@@ -35,8 +34,6 @@ public:
   }
 
 protected:
-  int direction;
-
   /*
    * The WASD keys are mapped directly to the direction states: 0123
    */
@@ -46,17 +43,11 @@ protected:
     switch(key)
     {
       case W_KEY: case A_KEY: case S_KEY: case D_KEY:
-        direction = key;
-        _broadcast(Message(this, MOVE, direction));
-        _broadcast(Message(this, ANIMATE, direction));
+        _broadcast(Message(this, MOVE, key));
         break;
 
       case SPACE_KEY:
-        /* TODO: Make a weapon component which handles the ATTACK animation 
-         * along with the animation of the attack
-         */
-        _broadcast(Message(this, ATTACK, direction));
-        _broadcast(Message(this, ANIMATE, direction + 4));
+        _broadcast(Message(this, ATTACK));
         break;
 
       default:
@@ -70,7 +61,6 @@ protected:
     {
       case W_KEY: case A_KEY: case S_KEY: case D_KEY:
         _broadcast(Message(this, STOP));
-        _broadcast(Message(this, STATE, key));
         break;
 
       default:
