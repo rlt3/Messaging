@@ -25,6 +25,7 @@ int main (void)
             break;
 
           case W_KEY: case A_KEY: case S_KEY: case D_KEY: case SPACE_KEY:
+          case LEFT_KEY:
             game.message(Message(&game, INPUT, key_event()));
             break;
         }

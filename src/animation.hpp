@@ -3,11 +3,19 @@
 
 #include "sprite.hpp"
 
+/*
+ * TODO:
+ *   Namespace'd enum for entity states: NORTH, DEATH, COMBAT, IDLE
+ *
+ *   So, for our combat animation it might be
+ *      component->message(Message(this, ANIMATE, direction + COMBAT));
+ */
+
 class Animation : public Component {
 public:
-  Animation(Component* s) : Component(s)
+  Animation(const char *spritefile, Component* s) : Component(s)
   {
-    _add(new Sprite("player.png", this));
+    _add(new Sprite(spritefile, this));
     _add(new Sprite(rect(-64, -64, 192, 192), "longsword.png", this));
 
     character = 0;
@@ -31,13 +39,17 @@ public:
         _components[weapon]->message(Message(this, STATE, direction));
         break;
 
-      case ATTACK:
+      case cATTACK:
         _components[character]->message(Message(this, ANIMATE, direction + 4));
         _components[weapon]->message(Message(this, ANIMATE, direction));
         break;
 
       case STOP:
         _components[character]->message(Message(this, STATE, direction));
+        break;
+
+      case DEATH:
+        _components[character]->message(Message(this, ANIMATE, 8));
         break;
 
       default:

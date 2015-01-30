@@ -10,7 +10,8 @@ public:
   Player(Component* s) : Component(s)
   {
     _add(new Vector(3, this));
-    _add(new Animation(this));
+    _add(new Animation("player.png", this));
+    _add(new Weapon(this));
 
     _broadcast(Message(this, POSITION, rect(64, 64, 64, 64)));
   }
@@ -25,6 +26,11 @@ public:
 
       case DEPUT:
         handle_deput(msg.data<int>());
+        break;
+
+        /* translate message from inside self to outside */
+      case cATTACK:
+        _self->message(Message(this, eATTACK, msg.data<Rect>()));
         break;
 
       default:
@@ -46,8 +52,12 @@ protected:
         _broadcast(Message(this, MOVE, key));
         break;
 
+      case LEFT_KEY:
+        _broadcast(Message(this, DEATH));
+        break;
+
       case SPACE_KEY:
-        _broadcast(Message(this, ATTACK));
+        _broadcast(Message(this, cATTACK));
         break;
 
       default:

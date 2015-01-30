@@ -40,6 +40,16 @@ public:
     , sprite(load_sprite(spritefile))
   { 
     max_frames = texture_width(sprite) / width;
+
+    if (strcmp(spritefile, "longsword.png") == 0)
+      box_show = true;
+    else
+      box_show = false;
+
+    box[0] = { -20, -32, 128, 96 };
+    box[1] = { -64,   0, 128, 64 };
+    box[2] = { -20,   0, 128, 96 };
+    box[3] = {   0,   0, 128, 64 };
   }
 
   /* constructor which assume default sprite rules */
@@ -57,6 +67,7 @@ public:
     , sprite(load_sprite(spritefile))
   { 
     max_frames = texture_width(sprite) / width;
+      box_show = false;
   }
 
   ~Sprite()
@@ -108,6 +119,11 @@ protected:
   Rect position;
 
   Spritesheet sprite;
+
+  Rect box[4];
+  bool box_show;
+
+  Rect hitbox;
 
   void update(uint32_t dt)
   {
@@ -164,10 +180,21 @@ protected:
     position.y = r.y + y_offset;
     position.w = width;
     position.h = height;
+
+    hitbox.x = r.x + box[state].x;
+    hitbox.y = r.y + box[state].y;
+    hitbox.w = box[state].w;
+    hitbox.h = box[state].h;
   }
 
   void draw()
   {
+    if (box_show && animating)
+    {
+      set_draw_color(0, 0, 0, 255);
+      draw_rect(hitbox);
+    }
+
     Rect f = { frame * width, state * height, width, height };
     draw_sprite(sprite, f, position);
   }

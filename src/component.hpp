@@ -16,11 +16,17 @@ enum MessageType {
 
   POSITION,  // x,y
   BODY,      // w,h
+  STATE,
 
   MOVE,
-  ATTACK,
-  STATE,
   STOP,
+
+  cATTACK,   // from self, as a command
+
+  eATTACK,   // from entity
+  HIT,
+  DAMAGE,
+  DEATH,
 
   ANIMATE,
   ANIMATION_DONE,

@@ -58,6 +58,7 @@ SDL_Rect rect(int, int, int, int);
 
 void set_draw_color(int r, int g, int b, int alpha);
 void draw_rect(int x, int y, int w, int h);
+void draw_rect(Rect r);
 
 void go();
 

@@ -137,6 +137,12 @@ void draw_rect(int x, int y, int w, int h)
   SDL_RenderFillRect(_renderer, &r); 
 }
 
+void draw_rect(Rect r)
+{
+  SDL_RenderFillRect(_renderer, &r); 
+}
+
+
 int texture_width(SDL_Texture* texture)
 {
   int w;
