@@ -52,6 +52,18 @@ public:
         _components[character]->message(Message(this, ANIMATE, 8));
         break;
 
+        /* 
+         * when calling _self, perhaps the best-case scenario is to always
+         * use the _self pointer when signing it
+         *
+         * bug just happened where an inifite loop of ANIMATION_DONE messages
+         * occurred because this keep sending the message up and then that
+         * message immediately got here, which got sent back up and so on.
+         */
+      case ANIMATION_DONE:
+        _self->message(msg);
+        break;
+
       default:
         _broadcast(msg);
         break;

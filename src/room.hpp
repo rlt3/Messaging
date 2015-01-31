@@ -22,6 +22,10 @@ public:
         _add(msg.data<Component*>());
         break;
 
+      case REMOVE:
+        _remove(msg.sender);
+        break;
+
       default:
         _broadcast(msg);
         break;

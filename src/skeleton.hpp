@@ -13,6 +13,20 @@ public:
 
     _broadcast(Message(this, POSITION, rect(128, 128, 64, 64)));
   }
+
+  void message(const Message &msg)
+  {
+    switch (msg.type)
+    {
+      case REMOVE:
+        _self->message(msg);
+        break;
+
+      default:
+        _broadcast(msg);
+        break;
+    }
+  }
 };
 
 #endif

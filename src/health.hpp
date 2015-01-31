@@ -17,23 +17,30 @@ public:
     switch(msg.type)
     {
       case eATTACK:
-        puts("attacked");
         enemy = msg.sender;
         _broadcast(Message(this, IS_COLLISION, msg.data<Rect>()));
         break;
 
       case COLLISION_TRUE:
-        puts("hit");
         enemy->message(Message(_self, HIT));
         break;
 
       case DAMAGE:
-        puts("damaged");
         damage(msg.data<int>());
+        break;
+
+      case ANIMATION_DONE:
+        switch (msg.data<int>())
+        {
+          case 8: // death animation
+            _self->message(Message(_self, REMOVE));
+            break;
+        }
         break;
 
       default:
         _broadcast(msg);
+        break;
     }
   };
 
