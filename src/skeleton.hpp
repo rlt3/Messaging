@@ -3,6 +3,7 @@
 
 #include "animation.hpp"
 #include "health.hpp"
+//#include "soundbite.hpp"
 
 class Skeleton : public Component {
 public:
@@ -10,6 +11,7 @@ public:
   {
     _add(new Animation("enemy.png", this));
     _add(new Health(this));
+    //_add(new Soundbite(this));
 
     _broadcast(Message(this, POSITION, rect(128, 128, 64, 64)));
   }

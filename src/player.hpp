@@ -4,6 +4,7 @@
 #include "vector.hpp"
 #include "animation.hpp"
 #include "weapon.hpp"
+#include "soundbite.hpp"
 
 class Player : public Component {
 public:
@@ -12,6 +13,7 @@ public:
     _add(new Vector(3, this));
     _add(new Animation("player.png", this));
     _add(new Weapon(this));
+    _add(new Soundbite(this));
 
     _broadcast(Message(this, POSITION, rect(64, 64, 64, 64)));
   }
